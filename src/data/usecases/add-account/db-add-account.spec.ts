@@ -130,4 +130,25 @@ describe('DbAddACcount Use', () => {
     // Assert
     await expect(promise).rejects.toThrow()
   })
+
+  it('Return an account on success', async () => {
+    // Arrange
+    const { sut } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password',
+    }
+
+    // Act
+    const account = await sut.add(accountData)
+
+    // Assert
+    expect(account).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password',
+    })
+  })
 })
