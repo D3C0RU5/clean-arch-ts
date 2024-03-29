@@ -1,4 +1,4 @@
-import { Collection, Db, MongoClient } from 'mongodb'
+import { Collection, Db, Document, MongoClient } from 'mongodb'
 
 // export class MongoHelper {
 //   private connection?: MongoClient
@@ -57,5 +57,9 @@ export const MongoHelper = {
   },
   getCollection(name: string): Collection | undefined {
     return this.db?.collection(name)
+  },
+  map(document: Document): Document {
+    const { _id, documentWithoutId } = document
+    return Object.assign({}, documentWithoutId, { id: _id })
   },
 }
