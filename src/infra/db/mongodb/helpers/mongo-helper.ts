@@ -46,8 +46,8 @@ import { Collection, Db, Document, MongoClient } from 'mongodb'
 export const MongoHelper = {
   client: null as MongoClient | null,
   db: null as Db | null,
-  async connect(): Promise<void> {
-    this.client = new MongoClient(process.env.MONGO_URL || '')
+  async connect(uri: string = process.env.MONGO_URL || ''): Promise<void> {
+    this.client = new MongoClient(uri)
     this.db = this.client.db(process.env.MONGO_DB_NAME || '')
   },
   async disconnect(): Promise<void> {
