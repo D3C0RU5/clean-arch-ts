@@ -203,7 +203,7 @@ describe('SignUp Controller', () => {
     const response = await sut.handle(makeFakeRequest())
 
     // Assert
-    expect(response).toEqual(serverError())
+    expect(response).toEqual(serverError(null))
   })
 
   it('Call AddAccount with correct values', async () => {
@@ -237,7 +237,7 @@ describe('SignUp Controller', () => {
     const response = await sut.handle(makeFakeRequest())
 
     // Assert
-    expect(response).toEqual(serverError())
+    expect(response).toEqual(serverError(null))
   })
   it('Return 200 if valid data is provided', async () => {
     // Arrange

@@ -6,9 +6,9 @@ export const badRequest = (error: Error): HttpResponse => ({
   body: error,
 })
 
-export const serverError = (): HttpResponse => ({
+export const serverError = (error: unknown): HttpResponse => ({
   statusCode: 500,
-  body: new ServerError(),
+  body: new ServerError(error instanceof Error ? error.stack : undefined),
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
