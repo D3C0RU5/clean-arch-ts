@@ -1,5 +1,6 @@
 import { LogErrorRepository } from '../../data/protocols/log-error-repository'
-import { serverError } from '../../presentation/helpers/http-helper'
+import { AccountModel } from '../../domain/models/account'
+import { ok, serverError } from '../../presentation/helpers/http-helper'
 import {
   Controller,
   HttpRequest,
@@ -10,13 +11,7 @@ import { LogControllerDecorator } from './log'
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-      const httpResponse: HttpResponse = {
-        statusCode: 200,
-        body: {
-          name: 'any_name',
-        },
-      }
-      return new Promise(resolve => resolve(httpResponse))
+      return new Promise(resolve => resolve(ok(makeFakeAccount())))
     }
   }
 
@@ -42,6 +37,21 @@ const makeFakeRequest = (): HttpRequest => {
       passwordConfirmation: 'any_password',
     },
   }
+}
+
+const makeFakeAccount = (): AccountModel => {
+  return {
+    id: 'any_id',
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+  }
+}
+
+const makeFakeServerError = (): HttpResponse => {
+  const fakerError = new Error()
+  fakerError.stack = 'any_stack'
+  return serverError(fakerError)
 }
 
 type SutTypes = {
@@ -78,19 +88,19 @@ describe('LogControllerDecorator', () => {
     const response = await sut.handle(makeFakeRequest())
 
     // Assert
-    expect(response).toEqual({ statusCode: 200, body: { name: 'any_name' } })
+    expect(response).toEqual(ok(makeFakeAccount()))
   })
 
   it('Call LogErrorRepository with correct error if controller returns a server error', async () => {
     // Arrange
     const { sut, controllerStub, logErrorRepositoryStub } = makeSut()
-    const fakerError = new Error()
-    fakerError.stack = 'any_stack'
-    const error = serverError(fakerError)
+
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'log')
     jest
       .spyOn(controllerStub, 'handle')
-      .mockReturnValueOnce(new Promise(resolve => resolve(error)))
+      .mockReturnValueOnce(
+        new Promise(resolve => resolve(makeFakeServerError())),
+      )
 
     // Act
     await sut.handle(makeFakeRequest())
