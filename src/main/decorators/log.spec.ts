@@ -21,6 +21,17 @@ const makeController = (): Controller => {
   return new ControllerStub()
 }
 
+const makeFakeRequest = (): HttpRequest => {
+  return {
+    body: {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password',
+    },
+  }
+}
+
 type SutTypes = {
   sut: LogControllerDecorator
   controllerStub: Controller
@@ -37,19 +48,22 @@ describe('LogControllerDecorator', () => {
     // Arrange
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
-    const httpRequest: HttpRequest = {
-      body: {
-        email: 'any_mail@mail.com',
-        name: 'any_name',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    }
 
     // Act
-    await sut.handle(httpRequest)
+    await sut.handle(makeFakeRequest())
 
     // Assert
-    expect(handleSpy).toHaveBeenCalledWith(httpRequest)
+    expect(handleSpy).toHaveBeenCalledWith(makeFakeRequest())
+  })
+
+  it('Return the same result of the controller', async () => {
+    // Arrange
+    const { sut, controllerStub } = makeSut()
+
+    // Act
+    const response = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(response).toEqual({ statusCode: 200, body: { name: 'any_name' } })
   })
 })
