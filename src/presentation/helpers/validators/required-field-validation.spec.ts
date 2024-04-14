@@ -8,7 +8,7 @@ const makeSut = () => {
 }
 
 describe('RequiredField Validation', () => {
-  it('Return n MissingParamError if validation fails', () => {
+  it('Return a MissingParamError if validation fails', () => {
     // Arrange
     const { sut } = makeSut()
 
