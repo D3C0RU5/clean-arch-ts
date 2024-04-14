@@ -1,7 +1,7 @@
 import { AddAccountModel } from '../../../domain/usecases/add-account'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http-helper'
-import { Validation } from '../../helpers/validation'
+import { Validation } from '../../helpers/validators/validation'
 import { SignUpController } from './signup'
 import {
   EmailValidator,
