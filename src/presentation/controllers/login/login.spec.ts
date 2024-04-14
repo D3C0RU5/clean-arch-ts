@@ -6,6 +6,7 @@ import {
 } from '../../helpers/http-helper'
 import { HttpRequest, EmailValidator, Authentication } from './login-protocols'
 import { LoginController } from './login'
+import { rejects } from 'assert'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { email: 'any_email@mail.com', password: 'any_password' },
@@ -134,5 +135,21 @@ describe('Login Controller', () => {
 
     // Assert
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  it('Return 500 if invalid Authentication throws', async () => {
+    // Arrange
+    const { sut, authenticationStub } = makeSut()
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(
+        new Promise((resolve, rejects) => rejects(new Error())),
+      )
+
+    // Act
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
