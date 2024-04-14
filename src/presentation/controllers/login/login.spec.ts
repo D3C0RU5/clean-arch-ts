@@ -1,6 +1,10 @@
 import { Authentication } from '../../../domain/usecases/authentication'
 import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http-helper'
+import {
+  badRequest,
+  serverError,
+  unauthorized,
+} from '../../helpers/http-helper'
 import { HttpRequest } from '../../protocols'
 import { EmailValidator } from '../../protocols/email-validator'
 import { LoginController } from './login'
@@ -21,7 +25,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth(email: string, password: string): Promise<string> {
+    async auth(email: string, password: string): Promise<string | null> {
       return new Promise(resolve => resolve('any_token'))
     }
   }
@@ -118,5 +122,19 @@ describe('Login Controller', () => {
 
     // Assert
     expect(authSpy).toHaveBeenCalledWith('any_email@mail.com', 'any_password')
+  })
+
+  it('Return 401 if invalid credentials are provided', async () => {
+    // Arrange
+    const { sut, authenticationStub } = makeSut()
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(new Promise(resolve => resolve(null)))
+
+    // Act
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
