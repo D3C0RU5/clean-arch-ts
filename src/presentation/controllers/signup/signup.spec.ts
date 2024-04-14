@@ -1,14 +1,9 @@
 import { AddAccountModel } from '../../../domain/usecases/add-account'
-import { InvalidParamError, MissingParamError } from '../../errors'
+import { MissingParamError } from '../../errors'
 import { badRequest, ok, serverError } from '../../helpers/http-helper'
 import { Validation } from '../../helpers/validators/validation'
 import { SignUpController } from './signup'
-import {
-  EmailValidator,
-  HttpRequest,
-  AddAccount,
-  AccountModel,
-} from './signup-protocols'
+import { HttpRequest, AddAccount, AccountModel } from './signup-protocols'
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
@@ -20,6 +15,7 @@ const makeAddAccount = (): AddAccount => {
   }
   return new AddAccountStub()
 }
+
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,7 +125,7 @@ describe('SignUp Controller', () => {
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  it('Return 400 if validion returns an error', async () => {
+  it('Return 400 if validation returns an error', async () => {
     // Arrange
     const { sut, validationStub } = makeSut()
 
