@@ -1,9 +1,6 @@
-# jetmoney-api
+# clean-arch-ts
 
-## How to build the image
+## How to start the application
 
-Execute the command `docker build -t jetmoney-api .`
-
-## How to start the container
-
-docker container run -d -p 5050:5050 jetmoney-api
+1. Turn on the mongodb `docker compose up`
+2. Start the aplication `npm start`
