@@ -1,25 +1,31 @@
+import { AuthenticationModel } from '../../../../domain/usecases/authentication'
 import { LoadAccountByEmailRepository } from '../../../protocols/load-account-by-email-repository'
 import { AccountModel } from '../db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
 
-const makeLoadAccountByEmailRepositoryStub =
-  (): LoadAccountByEmailRepository => {
-    class LoadAccountByEmailRepositoryStub
-      implements LoadAccountByEmailRepository
-    {
-      async load(email: string): Promise<AccountModel> {
-        const account: AccountModel = {
-          id: 'any_id',
-          email: 'any_email@mail.com',
-          name: 'any_name',
-          password: 'any_password',
-        }
-        return new Promise(resolve => resolve(account))
-      }
-    }
+const makeFakeAuthentication = (): AuthenticationModel => ({
+  email: 'any_email@mail.com',
+  password: 'any_password',
+})
 
-    return new LoadAccountByEmailRepositoryStub()
+const makeFakeAccount = (): AccountModel => ({
+  id: 'any_id',
+  email: 'any_email@mail.com',
+  name: 'any_name',
+  password: 'any_password',
+})
+
+function makeLoadAccountByEmailRepositoryStub(): LoadAccountByEmailRepository {
+  class LoadAccountByEmailRepositoryStub
+    implements LoadAccountByEmailRepository
+  {
+    async load(email: string): Promise<AccountModel> {
+      return new Promise(resolve => resolve(makeFakeAccount()))
+    }
   }
+
+  return new LoadAccountByEmailRepositoryStub()
+}
 
 type SutType = {
   sut: DbAuthentication
@@ -34,16 +40,11 @@ const makeSut = (): SutType => {
 
 describe('DbAuthentication UseCase', () => {
   it('Call LoadAccountByEmailRepository with correct email', async () => {
-    // Arrange
     const { sut, loadAccountByEmailRepository } = makeSut()
-
-    // Arrange(mock)
     const loadSpy = jest.spyOn(loadAccountByEmailRepository, 'load')
 
-    // Act
-    await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
+    await sut.auth(makeFakeAuthentication())
 
-    // Assert
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
