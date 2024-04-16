@@ -29,22 +29,32 @@ function makeLoadAccountByEmailRepositoryStub(): LoadAccountByEmailRepository {
 
 type SutType = {
   sut: DbAuthentication
-  loadAccountByEmailRepository: LoadAccountByEmailRepository
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 const makeSut = (): SutType => {
-  const loadAccountByEmailRepository = makeLoadAccountByEmailRepositoryStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepository)
+  const loadAccountByEmailRepositoryStub =
+    makeLoadAccountByEmailRepositoryStub()
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub)
 
-  return { sut, loadAccountByEmailRepository }
+  return { sut, loadAccountByEmailRepositoryStub }
 }
 
 describe('DbAuthentication UseCase', () => {
   it('Call LoadAccountByEmailRepository with correct email', async () => {
-    const { sut, loadAccountByEmailRepository } = makeSut()
-    const loadSpy = jest.spyOn(loadAccountByEmailRepository, 'load')
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'load')
 
     await sut.auth(makeFakeAuthentication())
 
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
+  })
+
+  it('Throw if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest
+      .spyOn(loadAccountByEmailRepositoryStub, 'load')
+      .mockRejectedValue(new Error())
+
+    await expect(sut.auth(makeFakeAuthentication())).rejects.toThrow()
   })
 })

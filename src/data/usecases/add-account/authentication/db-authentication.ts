@@ -9,7 +9,7 @@ export class DbAuthentication implements Authentication {
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
   ) {}
   async auth(authentication: AuthenticationModel): Promise<string | null> {
-    this.loadAccountByEmailRepository.load(authentication.email)
+    await this.loadAccountByEmailRepository.load(authentication.email)
     return null
   }
 }
