@@ -145,7 +145,7 @@ describe('DbAuthentication UseCase', () => {
   })
 
   it('Call TokenGenerator with correct id', async () => {
-    const { sut, tokenGeneratorStub } = makeSut()
+    const { sut } = makeSut()
 
     const accessToken = await sut.auth(makeFakeAuthentication())
 
