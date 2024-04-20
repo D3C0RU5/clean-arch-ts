@@ -41,7 +41,7 @@ describe('Bcrypt Adapter', () => {
     expect(hash).toBe('hash')
   })
 
-  it('Throw if bcrypt throw a hash on success', async () => {
+  it('Throw if hash throws', async () => {
     // Arrange
     const sut = makeSut()
 
@@ -94,5 +94,22 @@ describe('Bcrypt Adapter', () => {
 
     // Assert
     expect(isValid).toBe(false)
+  })
+
+  it('Throw if compare throws', async () => {
+    // Arrange
+    const sut = makeSut()
+
+    // Arrange (mock)
+    jest
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .spyOn<any, string>(bcrypt, 'compare')
+      .mockRejectedValueOnce(new Error())
+
+    // Act
+    const promise = sut.compare('any_value', 'any_hash')
+
+    // Assert
+    await expect(promise).rejects.toThrow()
   })
 })
