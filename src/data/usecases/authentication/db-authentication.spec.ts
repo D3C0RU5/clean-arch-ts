@@ -1,5 +1,5 @@
 import { AuthenticationModel } from '../../../domain/usecases/authentication'
-import { HashCompare } from '../../protocols/criptography/hash-compare'
+import { HashComparer } from '../../protocols/criptography/hash-comparer'
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { AccountModel } from '../add-account/db-add-account-protocols'
 import { DbAuthentication } from './db-authentication'
@@ -28,31 +28,31 @@ function makeLoadAccountByEmailRepositoryStub(): LoadAccountByEmailRepository {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-function makeHashCompare(): HashCompare {
-  class HashCompareStub implements HashCompare {
+function makeHashComparer(): HashComparer {
+  class HashComparerStub implements HashComparer {
     async compare(value: string, hash: string): Promise<boolean> {
       return new Promise(resolve => resolve(true))
     }
   }
 
-  return new HashCompareStub()
+  return new HashComparerStub()
 }
 
 type SutType = {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-  hashCompareStub: HashCompare
+  hashComparerStub: HashComparer
 }
 const makeSut = (): SutType => {
-  const hashCompareStub = makeHashCompare()
+  const hashComparerStub = makeHashComparer()
   const loadAccountByEmailRepositoryStub =
     makeLoadAccountByEmailRepositoryStub()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
-    hashCompareStub,
+    hashComparerStub,
   )
 
-  return { sut, loadAccountByEmailRepositoryStub, hashCompareStub }
+  return { sut, loadAccountByEmailRepositoryStub, hashComparerStub }
 }
 
 describe('DbAuthentication UseCase', () => {
@@ -86,8 +86,8 @@ describe('DbAuthentication UseCase', () => {
   })
 
   it('Call HashCompare with correct values', async () => {
-    const { sut, hashCompareStub } = makeSut()
-    const compareSpy = jest.spyOn(hashCompareStub, 'compare')
+    const { sut, hashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(hashComparerStub, 'compare')
 
     await sut.auth(makeFakeAuthentication())
 
