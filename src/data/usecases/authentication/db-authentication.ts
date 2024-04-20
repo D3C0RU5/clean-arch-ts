@@ -18,6 +18,6 @@ export class DbAuthentication implements Authentication {
 
     await this.hashComparer.compare(authentication.password, account?.password)
 
-    return 'isValid'
+    return null
   }
 }
