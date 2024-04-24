@@ -7,17 +7,23 @@ jest.mock('jsonwebtoken', () => ({
   },
 }))
 
+const makeSut = (): JwtAdapter => {
+  const sut = new JwtAdapter('secret')
+  return sut
+}
+
 describe('Jwt Adapter', () => {
   it('Call sign with correct params', async () => {
-    const sut = new JwtAdapter('secret')
+    const sut = makeSut()
     const signSpy = jest.spyOn(jwt, 'sign')
+
     await sut.encrypt('any_id')
 
     expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
   })
 
   it('Return a token on sign success', async () => {
-    const sut = new JwtAdapter('secret')
+    const sut = makeSut()
 
     const accessToken = await sut.encrypt('any_id')
 
@@ -25,7 +31,8 @@ describe('Jwt Adapter', () => {
   })
 
   it('Throw if sign throws', async () => {
-    const sut = new JwtAdapter('secret')
+    const sut = makeSut()
+
     jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
       throw new Error()
     })
