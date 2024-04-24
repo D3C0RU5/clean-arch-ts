@@ -24,7 +24,7 @@ export const MongoHelper = {
     return this.db!.collection(name)
   },
   map(document: Document): Document {
-    const { _id, documentWithoutId } = document
+    const { _id, ...documentWithoutId } = document
     return Object.assign({}, documentWithoutId, { id: _id })
   },
 }
