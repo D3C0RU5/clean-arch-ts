@@ -1,3 +1,3 @@
 export type UpdateAccessTokenRepository = {
-  update(id: string, token: string): Promise<void>
+  updateAccessToken(id: string, token: string): Promise<void>
 }
