@@ -69,5 +69,16 @@ describe('Account Mongo Repository', () => {
         password: 'any_password',
       })
     })
+
+    it('Return null if loadByEmail returns null', async () => {
+      // Arrange
+      const { sut } = makeSut()
+
+      // Act
+      const account = await sut.loadByEmail('any_email@mail.com')
+
+      // Assert
+      expect(account).toBeFalsy()
+    })
   })
 })
