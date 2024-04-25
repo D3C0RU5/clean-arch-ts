@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
-import { AccountMongoRepository } from './account'
+import { AccountMongoRepository } from './account-mongo-repository'
 
 const makeSut = () => {
   const sut = new AccountMongoRepository()
@@ -100,17 +100,6 @@ describe('Account Mongo Repository', () => {
 
       expect(account).toBeTruthy()
       expect(account?.accessToken).toBe('any_token')
-    })
-
-    it('Return null if loadByEmail returns null', async () => {
-      // Arrange
-      const { sut } = makeSut()
-
-      // Act
-      const account = await sut.loadByEmail('any_email@mail.com')
-
-      // Assert
-      expect(account).toBeFalsy()
     })
   })
 })

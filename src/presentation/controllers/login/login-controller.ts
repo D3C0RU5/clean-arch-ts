@@ -5,13 +5,13 @@ import {
   serverError,
   unauthorized,
 } from '../../helpers/http/http-helper'
-import { Validation } from '../signup/signup-protocols'
+import { Validation } from '../signup/signup-controller-protocols'
 import {
   Authentication,
   Controller,
   HttpRequest,
   HttpResponse,
-} from './login-protocols'
+} from './login-controller-protocols'
 
 export class LoginController implements Controller {
   constructor(
