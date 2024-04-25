@@ -3,7 +3,7 @@ version: '3'
 services:
   mongo-express:
     image: mongo-express
-    container_name: mongo-jetmoney
+    container_name: mongo-clean-arch-ts
     restart: 'no'
     depends_on:
       mongo:
@@ -27,7 +27,7 @@ services:
     image: mongo
     restart: always
     environment:
-      MONGO_INITDB_DATABASE: jetmoney
+      MONGO_INITDB_DATABASE: cleanarchdb
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     healthcheck:
