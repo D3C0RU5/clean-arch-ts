@@ -1,7 +1,7 @@
 FROM node:20.10.0
 WORKDIR /app
 COPY package*.json .
-RUN npm install
-COPY . .
+RUN npm install --only=prod
+COPY ./dist ./dist
 CMD ["npm", "start"]
-expose 5050
+EXPOSE 5050
