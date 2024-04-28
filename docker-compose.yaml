@@ -1,29 +1,8 @@
 version: '3'
 
 services:
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-clean-arch-ts
-    restart: 'no'
-    depends_on:
-      mongo:
-        condition: service_healthy
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_SITE_BASEURL: /mongoexpress
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
-      ME_CONFIG_MONGODB_SERVER: 'mongo'
-      ME_CONFIG_BASICAUTH_USERNAME: root
-      ME_CONFIG_BASICAUTH_PASSWORD: root
-      ME_CONFIG_MONGODB_PORT: 27017
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
-    networks:
-      - mongo-admin
-      - mongo-database
-
   mongo:
+    container_name: mongo-container
     image: mongo
     restart: always
     environment:
@@ -41,15 +20,27 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
-    networks:
-      - mongo-database
+  cleannode:
+    container_name: cleannode-api
+    image: node:20.10.0
+    working_dir: /app
+    restart: always
+    command: bash -c "npm install && npm run debug"
+    environment:
+      - MONGO_URL=mongodb://root:root@mongo:27017
+    volumes:
+      - ./dist/:/app/dist/
+      - ./package.json:/app/package.json
+    ports:
+      - '5000:5050'
+      - '9222:9222'
+    links:
+      - mongo
 
 volumes:
   mongo_data:
     driver: local
   mongo_config:
     driver: local
-
-networks:
-  mongo-database:
-  mongo-admin:
+  clean_node:
+    driver: local
