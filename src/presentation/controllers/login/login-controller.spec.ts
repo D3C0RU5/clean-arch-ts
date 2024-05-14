@@ -7,8 +7,8 @@ import {
 } from '../../helpers/http/http-helper'
 import { HttpRequest, Authentication } from './login-controller-protocols'
 import { LoginController } from './login-controller'
-import { Validation } from '../signup/signup-controller-protocols'
 import { AuthenticationModel } from '../../../domain/usecases/authentication'
+import { Validation } from '../../protocols'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: { email: 'any_email@mail.com', password: 'any_password' },
