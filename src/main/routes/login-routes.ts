@@ -6,4 +6,9 @@ import { makeLoginController } from '../factories/login/login-factory'
 export default (router: Router): void => {
   router.post('/signup', adaptRoute(makeSignUpController()))
   router.post('/login', adaptRoute(makeLoginController()))
+  router.get('/refresh-token', (req, res) =>
+    res.json({
+      token: 'ihA9YmOjiqLEYPMqRiuBkHqIiqGcBPVw5PmGETWZgQtixAxPch3Z3KV5GFDu3Kdq',
+    }),
+  )
 }
