@@ -1,14 +1,9 @@
 import { Router } from 'express'
-import { makeSignUpController } from '../factories/signup/signup-factory'
 import { adaptRoute } from '../adapters/express/express-route-adapter'
-import { makeLoginController } from '../factories/login/login-factory'
+import { makeSignUpController } from '../factories/controllers/signup/signup-controller-factory'
+import { makeLoginController } from '../factories/controllers/login/login-controller-factory'
 
 export default (router: Router): void => {
   router.post('/signup', adaptRoute(makeSignUpController()))
   router.post('/login', adaptRoute(makeLoginController()))
-  router.get('/refresh-token', (req, res) =>
-    res.json({
-      token: 'ihA9YmOjiqLEYPMqRiuBkHqIiqGcBPVw5PmGETWZgQtixAxPch3Z3KV5GFDu3Kdq',
-    }),
-  )
 }
