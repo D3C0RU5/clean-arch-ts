@@ -1,7 +1,12 @@
 import { AddAccountModel } from '../../../domain/usecases/add-account'
 import { AuthenticationModel } from '../../../domain/usecases/authentication'
-import { MissingParamError } from '../../errors'
-import { badRequest, ok, serverError } from '../../helpers/http/http-helper'
+import { EmailInUseError, MissingParamError } from '../../errors'
+import {
+  badRequest,
+  forbidden,
+  ok,
+  serverError,
+} from '../../helpers/http/http-helper'
 import { Validation } from '../../protocols/validation'
 import { Authentication } from '../login/login-controller-protocols'
 import { SignUpController } from './signup-controller'
@@ -119,6 +124,19 @@ describe('SignUp Controller', () => {
 
     // Assert
     expect(response).toEqual(serverError(null))
+  })
+
+  it('Return 403 if AddAccoubt returns null', async () => {
+    // Arrange
+    const { sut, addAccountStub } = makeSut()
+
+    jest.spyOn(addAccountStub, 'add').mockResolvedValueOnce(null)
+
+    // Act
+    const response = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(response).toEqual(forbidden(new EmailInUseError()))
   })
 
   it('Return 200 if valid data is provided', async () => {
