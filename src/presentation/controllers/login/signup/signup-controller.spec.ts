@@ -1,13 +1,13 @@
-import { AddAccountModel } from '../../../domain/usecases/add-account'
-import { AuthenticationModel } from '../../../domain/usecases/authentication'
-import { EmailInUseError, MissingParamError } from '../../errors'
+import { AddAccountModel } from '../../../../domain/usecases/add-account'
+import { AuthenticationModel } from '../../../../domain/usecases/authentication'
+import { EmailInUseError, MissingParamError } from '../../../errors'
 import {
   badRequest,
   forbidden,
   ok,
   serverError,
-} from '../../helpers/http/http-helper'
-import { Validation } from '../../protocols/validation'
+} from '../../../helpers/http/http-helper'
+import { Validation } from '../../../protocols/validation'
 import { Authentication } from '../login/login-controller-protocols'
 import { SignUpController } from './signup-controller'
 import {
