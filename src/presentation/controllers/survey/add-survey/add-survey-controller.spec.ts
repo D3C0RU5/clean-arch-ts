@@ -5,7 +5,11 @@ import {
   Validation,
 } from './add-survey-controller-protocols'
 import { AddSurveyController } from './add-survey-controller'
-import { badRequest } from '../../../helpers/http/http-helper'
+import {
+  badRequest,
+  noContent,
+  serverError,
+} from '../../../helpers/http/http-helper'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -96,5 +100,30 @@ describe('AddSurvey controller', () => {
 
     // Assert
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('Return 500 if AddSurvey throws', async () => {
+    // Arrange
+    const { sut, addSurveyStub } = makeSut()
+
+    // Mock
+    jest.spyOn(addSurveyStub, 'add').mockRejectedValueOnce(new Error())
+
+    // Act
+    const response = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  it('Return 204 on success', async () => {
+    // Arrange
+    const { sut } = makeSut()
+
+    // Act
+    const response = await sut.handle(makeFakeRequest())
+
+    // Assert
+    expect(response).toEqual(noContent())
   })
 })
