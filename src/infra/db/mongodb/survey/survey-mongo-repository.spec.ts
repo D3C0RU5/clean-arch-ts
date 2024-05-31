@@ -28,7 +28,7 @@ describe('Survey Mongo Repository', () => {
   }
 
   describe('Testing add', () => {
-    it('Return void on add success', async () => {
+    it('Add a survey on success', async () => {
       // Arrange
       const { sut } = makeSut()
 
