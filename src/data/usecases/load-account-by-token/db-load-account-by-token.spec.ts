@@ -31,9 +31,23 @@ describe('DbLoadAccountByToken Usecase ', () => {
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
 
     // Act
-    await sut.load('any_token')
+    await sut.load('any_token', 'any_role')
 
     // Assert
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
+  })
+
+  test('Return null if Decrypter returns null', async () => {
+    // Arrange
+    const { sut, decrypterStub } = makeSut()
+
+    // Mock
+    jest.spyOn(decrypterStub, 'decrypt').mockResolvedValueOnce(null)
+
+    // Act
+    const result = await sut.load('any_token', 'any_role')
+
+    // Assert
+    expect(result).toBe(null)
   })
 })
