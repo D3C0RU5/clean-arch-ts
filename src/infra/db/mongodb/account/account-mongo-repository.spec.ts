@@ -24,7 +24,7 @@ describe('Account Mongo Repository', () => {
     MongoHelper.disconnect()
   })
 
-  describe('Testing add', () => {
+  describe('add()', () => {
     it('Return an account on add success', async () => {
       // Arrange
       const { sut } = makeSut()
@@ -47,7 +47,7 @@ describe('Account Mongo Repository', () => {
     })
   })
 
-  describe('Testing loadByEmail', () => {
+  describe('loadByEmail()', () => {
     it('Return an account on loadByEmail success', async () => {
       // Arrange
       const { sut } = makeSut()
@@ -82,7 +82,7 @@ describe('Account Mongo Repository', () => {
     })
   })
 
-  describe('Testing updateAccessToken', () => {
+  describe('updateAccessToken()', () => {
     it('Update the account accessToken on updateAccessToken success', async () => {
       // Arrange
       const { sut } = makeSut()

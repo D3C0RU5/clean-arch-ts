@@ -16,100 +16,103 @@ const makeSut = (): BcryptAdapter => {
 }
 
 describe('Bcrypt Adapter', () => {
-  it('Call hash with correct values', async () => {
-    // Arrange
-    const sut = makeSut()
+  describe('hasher()', () => {
+    it('Call hash with correct values', async () => {
+      // Arrange
+      const sut = makeSut()
 
-    // Arrange (mock)
-    const hashSpy = jest.spyOn(bcrypt, 'hash')
+      // Arrange (mock)
+      const hashSpy = jest.spyOn(bcrypt, 'hash')
 
-    // Act
-    await sut.hash('any_value')
+      // Act
+      await sut.hash('any_value')
 
-    // Assert
-    expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
-  })
+      // Assert
+      expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
+    })
 
-  it('Return a valid hash on hash success', async () => {
-    // Arrange
-    const sut = makeSut()
+    it('Return a valid hash on hash success', async () => {
+      // Arrange
+      const sut = makeSut()
 
-    // Act
-    const hash = await sut.hash('any_value')
+      // Act
+      const hash = await sut.hash('any_value')
 
-    // Assert
-    expect(hash).toBe('hash')
-  })
+      // Assert
+      expect(hash).toBe('hash')
+    })
 
-  it('Throw if hash throws', async () => {
-    // Arrange
-    const sut = makeSut()
+    it('Throw if hash throws', async () => {
+      // Arrange
+      const sut = makeSut()
 
-    // Arrange (mock)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn<any, string>(bcrypt, 'hash').mockRejectedValueOnce(new Error())
-
-    // Act
-    const promise = sut.hash('any_value')
-
-    // Assert
-    await expect(promise).rejects.toThrow()
-  })
-
-  it('Call compare with correct values', async () => {
-    // Arrange
-    const sut = makeSut()
-
-    // Arrange (mock)
-    const compareSpy = jest.spyOn(bcrypt, 'compare')
-
-    // Act
-    await sut.compare('any_value', 'any_hash')
-
-    // Assert
-    expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash')
-  })
-
-  it('Return true when compare succeeds', async () => {
-    // Arrange
-    const sut = makeSut()
-
-    // Act
-    const isValid = await sut.compare('any_value', 'any_hash')
-
-    // Assert
-    expect(isValid).toBe(true)
-  })
-
-  it('Return false when compare fails', async () => {
-    // Arrange
-    const sut = makeSut()
-
-    // Arrange (mock)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn<any, string>(bcrypt, 'compare').mockResolvedValueOnce(false)
-
-    // Act
-    const isValid = await sut.compare('any_value', 'any_hash')
-
-    // Assert
-    expect(isValid).toBe(false)
-  })
-
-  it('Throw if compare throws', async () => {
-    // Arrange
-    const sut = makeSut()
-
-    // Arrange (mock)
-    jest
+      // Arrange (mock)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .spyOn<any, string>(bcrypt, 'compare')
-      .mockRejectedValueOnce(new Error())
+      jest.spyOn<any, string>(bcrypt, 'hash').mockRejectedValueOnce(new Error())
 
-    // Act
-    const promise = sut.compare('any_value', 'any_hash')
+      // Act
+      const promise = sut.hash('any_value')
 
-    // Assert
-    await expect(promise).rejects.toThrow()
+      // Assert
+      await expect(promise).rejects.toThrow()
+    })
+  })
+  describe('compare()', () => {
+    it('Call compare with correct values', async () => {
+      // Arrange
+      const sut = makeSut()
+
+      // Arrange (mock)
+      const compareSpy = jest.spyOn(bcrypt, 'compare')
+
+      // Act
+      await sut.compare('any_value', 'any_hash')
+
+      // Assert
+      expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash')
+    })
+
+    it('Return true when compare succeeds', async () => {
+      // Arrange
+      const sut = makeSut()
+
+      // Act
+      const isValid = await sut.compare('any_value', 'any_hash')
+
+      // Assert
+      expect(isValid).toBe(true)
+    })
+
+    it('Return false when compare fails', async () => {
+      // Arrange
+      const sut = makeSut()
+
+      // Arrange (mock)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      jest.spyOn<any, string>(bcrypt, 'compare').mockResolvedValueOnce(false)
+
+      // Act
+      const isValid = await sut.compare('any_value', 'any_hash')
+
+      // Assert
+      expect(isValid).toBe(false)
+    })
+
+    it('Throw if compare throws', async () => {
+      // Arrange
+      const sut = makeSut()
+
+      // Arrange (mock)
+      jest
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .spyOn<any, string>(bcrypt, 'compare')
+        .mockRejectedValueOnce(new Error())
+
+      // Act
+      const promise = sut.compare('any_value', 'any_hash')
+
+      // Assert
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
